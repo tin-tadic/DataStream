@@ -1,0 +1,6 @@
+#pattern  filter=crypt diff=crypt merge=crypt
+consumer/src/main/resources/* filter=crypt diff=crypt merge=crypt
+
+streamer/src/main/resources/* filter=crypt diff=crypt merge=crypt
+
+k8s/** filter=crypt diff=crypt merge=crypt

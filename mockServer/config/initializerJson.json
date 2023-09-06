@@ -1,0 +1,15 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/third-party-api"
+    },
+    "httpResponse": {
+      "body": {
+        "errorCount": 0,
+        "errors": []
+      },
+      "statusCode": 200
+    }
+  }
+]

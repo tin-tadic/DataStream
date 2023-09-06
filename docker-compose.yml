@@ -1,0 +1,68 @@
+version: "3"
+services:
+  mongodbY:
+    image: mongo:4.0
+    container_name: mongodb
+    hostname: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=datastream
+      - MONGO_INITDB_ROOT_PASSWORD=datastream
+      - MONGO_INITDB_DATABASE=admin
+      - MONGO_REPLICASET=local_datastream_replicaset
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "local_datastream_replicaset" ]
+    ports:
+      - "27017:27017"
+    volumes:
+      - "./data/mongo/mongo_primary:/data/db"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mongodbZ:
+    image: mongo:4.0
+    container_name: mongodbZ
+    hostname: mongodbZ
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=datastream
+      - MONGO_INITDB_ROOT_PASSWORD=datastream
+      - MONGO_INITDB_DATABASE=admin
+      - MONGO_REPLICASET=local_datastream_replicaset
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "local_datastream_replicaset" ]
+    ports:
+      - "27018:27017"
+    volumes:
+      - "./data/mongo/mongo_secondary:/data/db"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  rabbitmqY:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=datastream
+      - RABBITMQ_DEFAULT_PASS=datastream
+      - RMQ_PARTITION_HANDLING=ignore
+      - RMQMGMT_SSL=false
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - "./data/rabbitmq:/var/lib/rabbitmq/mnesia"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+  mockServer:
+    image: mockserver/mockserver:mockserver-5.11.1
+    container_name: mockServer
+    hostname: mockServer
+    environment:
+      MOCKSERVER_WATCH_INITIALIZATION_JSON: "true"
+      MOCKSERVER_PROPERTY_FILE: /config/mockserver.properties
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializerJson.json
+    volumes:
+      - "./mockServer/config:/config"
+    ports:
+      - "1080:1080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
