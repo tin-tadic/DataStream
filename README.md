@@ -6,15 +6,15 @@ It consists of two submodules with different goals, acting as a pub-sub pair:
 
 - **Streamer:**
     1. Reads the change stream and creates third party API messages
-    2. Saves them into its own db (`data`)
+    2. Saves them into its own db (`dataStreamApplication.data`)
     3. Periodically sends them to rmq for the Consumer
 
 - **Consumer:**
-    1. Polls the rmq queue (polling consumer)
+    1. Polls the rmq queue (polling consumer, not a queue listener)
     2. Sends the tax transactions to third party API
 
 ## Minimum requirements
-Java: JDK 11+
+Java: JDK 11+  
 Docker and docker-compose
 
 ## Queue Messages Batch Job Info
